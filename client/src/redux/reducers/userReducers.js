@@ -29,7 +29,7 @@ export const userReducer = (
       return {
         loading: false,
         success: true,
-        message: "signing up successsful",
+        message: "successsfully signed up",
       };
     case USER_SIGNUP_FAILED:
       return { loading: false, error: true, message: action.payload };

@@ -67,7 +67,9 @@ const Signup = () => {
   const [alerts, setAlerts] = useState(false);
 
   const dispatch = useDispatch();
-  const { message, error, success } = useSelector((state) => state.loginUser);
+  const { loading, message, error, success } = useSelector(
+    (state) => state.loginUser
+  );
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -136,16 +138,27 @@ const Signup = () => {
               />
             </Grid>
           </Grid>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-            onClick={signupHandler}
-          >
-            Sign Up
-          </Button>
+          {loading ? (
+            <Button
+              variant="contained"
+              fullWidth
+              disabled
+              className={classes.submit}
+            >
+              Sign Up...
+            </Button>
+          ) : (
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+              onClick={signupHandler}
+            >
+              Sign Up
+            </Button>
+          )}
           <Grid container justifyContent="flex-end">
             <Grid item>
               <Link to="/signin" className={classes.link}>

@@ -17,6 +17,7 @@ code {
   color: white;
   padding: 1rem;
   font-weight: 400;
+  margin: 1rem 0;
 }
 .alert--danger {
   background-color: #fa4d4d;
