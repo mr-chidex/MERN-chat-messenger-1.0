@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -7,6 +7,8 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import { useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -32,8 +34,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Home = () => {
+const JoinGroup = () => {
   const classes = useStyles();
+  const [groupName, setGroupName] = useState("");
+  const history = useHistory();
+  const { user } = useSelector((state) => state.loginUser);
+
+  const joinGroupHandler = (e) => {
+    e.preventDefault();
+    if (!groupName) return;
+    console.log(user);
+    history.push(`/chat/${groupName}`);
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -55,6 +67,7 @@ const Home = () => {
             label="Group Name"
             name="group"
             autoFocus
+            onChange={(e) => setGroupName(e.target.value)}
           />
 
           <Button
@@ -63,6 +76,7 @@ const Home = () => {
             variant="contained"
             color="primary"
             className={classes.submit}
+            onClick={joinGroupHandler}
           >
             Join Group
           </Button>
@@ -72,4 +86,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default JoinGroup;
