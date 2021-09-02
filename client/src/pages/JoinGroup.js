@@ -34,16 +34,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const JoinGroup = () => {
+const JoinGroup = ({ socket }) => {
   const classes = useStyles();
   const [groupName, setGroupName] = useState("");
   const history = useHistory();
   const { user } = useSelector((state) => state.loginUser);
 
-  const joinGroupHandler = (e) => {
+  const joinGroupHandler = async (e) => {
     e.preventDefault();
     if (!groupName) return;
-    console.log(user);
+
+    const roomData = { user, room: groupName };
+
+    await socket.emit("joinRoom", roomData);
     history.push(`/chat/${groupName}`);
   };
 
@@ -55,7 +58,7 @@ const JoinGroup = () => {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Join Group
+          Join Room
         </Typography>
         <form className={classes.form} noValidate>
           <TextField
@@ -78,7 +81,7 @@ const JoinGroup = () => {
             className={classes.submit}
             onClick={joinGroupHandler}
           >
-            Join Group
+            Join Room
           </Button>
         </form>
       </div>
