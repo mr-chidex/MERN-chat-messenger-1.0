@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -10,6 +10,10 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+
+import { userSignupAction } from "../redux/actions/userActions";
+import Alerts from "../components/Alerts";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -57,6 +61,25 @@ function Copyright() {
 
 const Signup = () => {
   const classes = useStyles();
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [alerts, setAlerts] = useState(false);
+
+  const dispatch = useDispatch();
+  const { message, error, success } = useSelector((state) => state.loginUser);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  const signupHandler = (e) => {
+    e.preventDefault();
+
+    const user = { username, email, password };
+    dispatch(userSignupAction(user));
+    setAlerts(true);
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -69,6 +92,9 @@ const Signup = () => {
           Sign up
         </Typography>
         <form className={classes.form} noValidate>
+          {alerts && (error || success) && (
+            <Alerts message={message} type={error ? "danger" : "success"} />
+          )}
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
@@ -80,6 +106,7 @@ const Signup = () => {
                 name="username"
                 autoComplete="uname"
                 autoFocus
+                onChange={(e) => setUsername(e.target.value)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -91,6 +118,7 @@ const Signup = () => {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+                onChange={(e) => setEmail(e.target.value)}
               />
             </Grid>
 
@@ -104,6 +132,7 @@ const Signup = () => {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                onChange={(e) => setPassword(e.target.value)}
               />
             </Grid>
           </Grid>
@@ -113,6 +142,7 @@ const Signup = () => {
             variant="contained"
             color="primary"
             className={classes.submit}
+            onClick={signupHandler}
           >
             Sign Up
           </Button>
