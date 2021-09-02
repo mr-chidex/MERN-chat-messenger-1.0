@@ -13,6 +13,7 @@ const users = require("./routes/users");
 
 app.use(morgan("dev"));
 app.use(cors());
+app.use(express.json());
 
 app.use("/api/v1/users", users);
 
