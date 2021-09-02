@@ -33,33 +33,34 @@ export const userSignupAction = (user) => async (dispatch) => {
   }
 };
 
-export const userSigninAction =
-  (emailUsername, password) => async (dispatch, getState) => {
-    try {
-      dispatch({ type: USER_SIGNIN_REQUEST });
+export const userSigninAction = (user) => async (dispatch, getState) => {
+  try {
+    const { emailUsername, password } = user;
 
-      const { data } = await axios({
-        url: "/users/signin",
-        data: { emailUsername, password },
-        method: "POST",
-      });
+    dispatch({ type: USER_SIGNIN_REQUEST });
 
-      dispatch({ type: USER_SIGNIN_SUCCESS, payload: data });
+    const { data } = await axios({
+      url: "/users/signin",
+      data: { emailUsername, password },
+      method: "POST",
+    });
 
-      localStorage.setItem(
-        "CHAT_USER",
-        JSON.stringify(getState().userLogin.user)
-      );
-    } catch (error) {
-      dispatch({
-        type: USER_SIGNIN_FAILED,
-        payload:
-          error.response && error.response.data.message
-            ? error.response.data.message
-            : error.message,
-      });
-    }
-  };
+    dispatch({ type: USER_SIGNIN_SUCCESS, payload: data });
+
+    localStorage.setItem(
+      "CHAT_USER",
+      JSON.stringify(getState().userLogin.user)
+    );
+  } catch (error) {
+    dispatch({
+      type: USER_SIGNIN_FAILED,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
 
 export const userLogoutAction = () => async (dispatch) => {
   localStorage.removeItem("CHAT_USER");
