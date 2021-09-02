@@ -45,14 +45,14 @@ io.on("connection", (socket) => {
     console.log(`${roomData.user.username} joined romm - ${roomData.room}`);
 
     // emits to current user only
-    socket.emit("message", {
-      action: "USER_JOINED_ROOM",
-      payload: `Welcome to ${roomData.room}`,
+    socket.emit("USER_JOINED_ROOM", {
+      action: "Notify_User",
+      payload: `${roomData.user.username} welcome to ${roomData.room}`,
     });
 
     //emits to all users except cuurent user in a particular room(group)
-    socket.broadcast.to(roomData.room).emit("message", {
-      action: "NOTIFY_USERS",
+    socket.broadcast.to(roomData.room).emit("USER_JOINED_ROOM", {
+      action: "Notify_Users",
       payload: `${roomData.user.username} just joined`,
     });
   });
@@ -66,9 +66,9 @@ io.on("connection", (socket) => {
     // });
 
     //emits to all user but yourself
-    socket.to(data.room).emit("recieveMessage", {
+    socket.to(data.room).emit("RECIEVED_MESSAGE", {
       action: "Notify_Users",
-      payload: { data },
+      payload: data,
     });
   });
 

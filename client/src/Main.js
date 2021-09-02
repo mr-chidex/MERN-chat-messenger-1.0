@@ -7,7 +7,7 @@ import JoinGroup from "./pages/JoinGroup";
 import Signin from "./pages/Signin";
 import Signup from "./pages/Signup";
 
-const socket = io.connect("http://localhost:5050");
+const socket = io.connect(process.env.REACT_APP_BASE_URL);
 
 const Main = () => {
   return (
@@ -18,7 +18,7 @@ const Main = () => {
         <Route path="/join">
           <JoinGroup socket={socket} />
         </Route>
-        <Route path="/chat">
+        <Route path="/chat/:groupId">
           <Chat socket={socket} />
         </Route>
       </Switch>
