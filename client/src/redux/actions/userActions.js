@@ -49,7 +49,7 @@ export const userSigninAction = (user) => async (dispatch, getState) => {
 
     localStorage.setItem(
       "CHAT_USER",
-      JSON.stringify(getState().userLogin.user)
+      JSON.stringify(getState().loginUser.user)
     );
   } catch (error) {
     dispatch({
