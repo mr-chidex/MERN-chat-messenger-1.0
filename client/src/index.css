@@ -45,7 +45,7 @@ code {
 }
 
 .chat-header {
-  background-color: #20c464;
+  background-color: #3f51b5;
   width: 100%;
   padding: 1rem;
   color: #fff;
@@ -79,4 +79,8 @@ code {
   padding: 0.5rem;
   border: 8px solid #fff;
   outline: none;
+}
+
+.end-of-messages {
+  height: 5rem;
 }

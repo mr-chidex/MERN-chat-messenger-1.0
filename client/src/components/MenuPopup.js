@@ -7,22 +7,14 @@ import ListItemText from "@material-ui/core/ListItemText";
 import { IconButton } from "@material-ui/core";
 import { MoreVert, ExitToApp } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import { createTheme } from "@material-ui/core/styles";
-import { ThemeProvider } from "@material-ui/styles";
 import { useHistory } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: "#20c464",
-    },
-  },
-});
+import { userLogoutAction } from "../redux/actions/userActions";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
   iconColor: { color: "#fff" },
-  buttonColor: { color: "#111" },
-}));
+});
 
 const StyledMenu = withStyles({
   paper: {
@@ -59,6 +51,7 @@ const MenuPopup = () => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const history = useHistory();
+  const dispatch = useDispatch();
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -68,8 +61,13 @@ const MenuPopup = () => {
     setAnchorEl(null);
   };
 
+  const logoutHandler = () => {
+    dispatch(userLogoutAction());
+    history.push("/signin");
+  };
+
   return (
-    <ThemeProvider theme={theme}>
+    <div>
       <IconButton
         aria-controls="customized-menu"
         aria-haspopup="true"
@@ -92,14 +90,14 @@ const MenuPopup = () => {
           </ListItemIcon>
           <ListItemText primary="Leave Room" />
         </StyledMenuItem>
-        <StyledMenuItem onClick={() => console.log("here i")}>
+        <StyledMenuItem onClick={logoutHandler}>
           <ListItemIcon>
             <ExitToApp fontSize="small" />
           </ListItemIcon>
           <ListItemText primary="Logout" />
         </StyledMenuItem>
       </StyledMenu>
-    </ThemeProvider>
+    </div>
   );
 };
 

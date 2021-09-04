@@ -1,27 +1,30 @@
 import { Container, IconButton } from "@material-ui/core";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { Send } from "@material-ui/icons";
-import { makeStyles } from "@material-ui/core/styles";
+import FlipMove from "react-flip-move";
+
 import MenuPopup from "../components/MenuPopup";
 
-const useStyles = makeStyles((theme) => ({
-  iconColor: { color: "#fff" },
-  buttonColor: { color: "#111" },
-}));
-
 const Chat = ({ socket }) => {
-  const classes = useStyles();
   const [welcomeUser, setWelcomeUser] = useState("");
   const [message, setMessage] = useState("");
   const [chats, setChats] = useState([]);
   const { user } = useSelector((state) => state.loginUser);
   const { groupId } = useParams();
+  const endOfMessages = useRef("");
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  const scrollToBottomHandler = () => {
+    endOfMessages?.current?.scrollIntoView({
+      block: "start",
+      behavior: "smooth",
+    });
+  };
 
   useEffect(() => {
     socket.on("USER_JOINED_ROOM", (data) => {
@@ -39,6 +42,7 @@ const Chat = ({ socket }) => {
     socket.on("RECIEVED_MESSAGE", (data) => {
       if (data.action === "Notify_Users") {
         setChats((chats) => [...chats, data.payload]);
+        scrollToBottomHandler();
       }
     });
   }, [socket]);
@@ -55,50 +59,48 @@ const Chat = ({ socket }) => {
     await socket.emit("sendMessage", messageData);
     setChats((chats) => [...chats, messageData]);
     setMessage("");
+    scrollToBottomHandler();
   };
 
   return (
-    // <Container component="main" maxWidth="xs">
-    <>
-      <div className="chat-main">
-        <Container component="main" maxWidth="lg">
-          <div className="chat-container">
-            <header className="chat-header">
-              <h3 className="chat-header__title">Chat Room</h3>
+    <div className="chat-main">
+      <Container component="main" maxWidth="lg">
+        <div className="chat-container">
+          <header className="chat-header">
+            <h3 className="chat-header__title">{groupId}</h3>
 
-              {/* <IconButton className={classes.iconColor}>
-                <MoreVert />
-              </IconButton> */}
-              <MenuPopup />
-            </header>
+            <MenuPopup />
+          </header>
 
-            <div className="chat-content">
-              <h2>{welcomeUser}</h2>
-              <div>
-                <p>Messages</p>
-              </div>
+          <div className="chat-content">
+            <h2>{welcomeUser}</h2>
+            <div>
+              <p>Messages</p>
+            </div>
 
+            <FlipMove>
               {chats.map((msg, index) => (
                 <p key={index}>{msg.message}</p>
               ))}
-            </div>
+            </FlipMove>
 
-            <form className="chat-form" onSubmit={sendMessage}>
-              <input
-                type="text"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-              />
-
-              <IconButton className={classes.buttonColor} onClick={sendMessage}>
-                <Send />
-              </IconButton>
-            </form>
+            <div className="end-of-messages" ref={endOfMessages}></div>
           </div>
-        </Container>
-      </div>
-    </>
-    // </Container>
+
+          <form className="chat-form" onSubmit={sendMessage}>
+            <input
+              type="text"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+            />
+
+            <IconButton color="primary" onClick={sendMessage}>
+              <Send />
+            </IconButton>
+          </form>
+        </div>
+      </Container>
+    </div>
   );
 };
 
