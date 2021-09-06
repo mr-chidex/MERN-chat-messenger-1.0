@@ -37,12 +37,12 @@ const io = new Server(server, {
 });
 
 io.on("connection", (socket) => {
-  console.log("User connected - ", socket.id);
+  // console.log("User connected - ", socket.id);
 
   //join room
   socket.on("joinRoom", (roomData) => {
     socket.join(roomData.room);
-    console.log(`${roomData.user.username} joined romm - ${roomData.room}`);
+    // console.log(`${roomData.user.username} joined romm - ${roomData.room}`);
 
     // emits to current user only
     socket.emit("USER_JOINED_ROOM", {
@@ -58,7 +58,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("sendMessage", (data) => {
-    console.log(data);
+    // console.log(data);
 
     // socket.broadcast.to(data.room).emit("message", {
     //   action: "Notify_Users",
