@@ -19,6 +19,17 @@ const Chat = ({ socket }) => {
     window.scrollTo(0, 0);
   }, []);
 
+  //Welcome a new user and notify current users in a room
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setWelcomeUser("");
+    }, 3000);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [welcomeUser]);
+
   const scrollToBottomHandler = () => {
     endOfMessages?.current?.scrollIntoView({
       block: "start",
@@ -30,10 +41,12 @@ const Chat = ({ socket }) => {
     socket.on("USER_JOINED_ROOM", (data) => {
       if (data.action === "Notify_User") {
         setWelcomeUser(data.payload);
+        scrollToBottomHandler();
       }
 
       if (data.action === "Notify_Users") {
         setWelcomeUser(data.payload);
+        scrollToBottomHandler();
       }
     });
   }, [socket]);
@@ -50,10 +63,18 @@ const Chat = ({ socket }) => {
   const sendMessage = async (e) => {
     e.preventDefault();
 
+    if (!message) return;
+
     const messageData = {
       username: user?.username,
       message,
       room: groupId,
+      time:
+        new Date(Date.now()).getHours() +
+        ":" +
+        new Date(Date.now()).getMinutes() +
+        ":" +
+        new Date(Date.now()).getSeconds(),
     };
 
     await socket.emit("sendMessage", messageData);
@@ -64,27 +85,47 @@ const Chat = ({ socket }) => {
 
   return (
     <div className="chat-main">
-      <Container component="main" maxWidth="lg">
+      <Container component="main" maxWidth="md">
         <div className="chat-container">
           <header className="chat-header">
-            <h3 className="chat-header__title">{groupId}</h3>
+            <h3 className="chat-header__title">Room - {groupId}</h3>
 
             <MenuPopup />
           </header>
 
-          <div className="chat-content">
-            <h2>{welcomeUser}</h2>
-            <div>
-              <p>Messages</p>
+          <div className="chat-content-container">
+            <div className="chat-content-messages">
+              <FlipMove>
+                {chats.map((msg, index) => (
+                  <div
+                    key={index}
+                    className={
+                      msg.username === user?.username
+                        ? "chat-message-right"
+                        : "chat-message-left"
+                    }
+                  >
+                    <p className="chat-message__user">
+                      <small>
+                        {msg.username === user?.username ? "You" : msg.username}
+                      </small>
+                    </p>
+                    <p>{msg.message}</p>
+                    <p className="chat-message__time">
+                      <small>{msg.time}</small>
+                    </p>
+                  </div>
+                ))}
+              </FlipMove>
+
+              {welcomeUser && (
+                <div className="chat-welcome-notify">
+                  <small>{welcomeUser}</small>
+                </div>
+              )}
+
+              <div className="end-of-messages" ref={endOfMessages}></div>
             </div>
-
-            <FlipMove>
-              {chats.map((msg, index) => (
-                <p key={index}>{msg.message}</p>
-              ))}
-            </FlipMove>
-
-            <div className="end-of-messages" ref={endOfMessages}></div>
           </div>
 
           <form className="chat-form" onSubmit={sendMessage}>

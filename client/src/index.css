@@ -38,6 +38,12 @@ code {
   height: 100vh;
 }
 
+@media (min-width: 768px) {
+  .chat-main {
+    padding: 4rem 0;
+  }
+}
+
 .chat-container {
   background-color: #fff;
   /* margin: 5rem 0; */
@@ -54,13 +60,14 @@ code {
 }
 
 .chat-header__title {
+  text-align: center;
   flex: 1;
 }
 
-.chat-content {
+.chat-content-messages {
   padding: 1rem 4rem;
-  background-color: rgb(243, 239, 239);
-  height: 80vh;
+  background-color: #eee4e4;
+  height: calc(100vh - 12rem);
   overflow-y: scroll;
 }
 
@@ -70,7 +77,7 @@ code {
   width: 100%;
   position: absolute;
   bottom: 0;
-  background-color: #d6d1d1;
+  background-color: #6cadeb;
   padding: 0.5rem 1rem;
 }
 
@@ -83,4 +90,47 @@ code {
 
 .end-of-messages {
   height: 5rem;
+}
+
+/**messages **/
+.chat-message-left {
+  width: 20rem;
+  height: fit-content;
+  padding: 0.5rem 1.2rem 1.2rem;
+  margin-bottom: 0.5rem;
+  background-color: #2986dd;
+  border-bottom-left-radius: 15px;
+  margin-right: auto;
+  color: white;
+}
+
+.chat-message-right {
+  width: 20rem;
+  height: fit-content;
+  padding: 0.5rem 1.2rem 1.2rem;
+  margin-bottom: 0.5rem;
+  background-color: #4e5cad;
+  border-bottom-right-radius: 15px;
+  color: white;
+  margin-left: auto;
+}
+
+.chat-message__user {
+  color: #06f6a6;
+}
+
+.chat-message__time {
+  color: #00fff2;
+  text-align: right;
+}
+
+/*welcome notification*/
+.chat-welcome-notify {
+  text-align: center;
+  margin: 0.8rem auto;
+  background-color: #fff;
+  padding: 0.4rem;
+  border-radius: 20rem;
+  width: 50%;
+  font-weight: 500;
 }
