@@ -12,13 +12,13 @@ const server = http.createServer(app);
 // });
 
 io.on("connection", (socket) => {
-  console.log("User connected - ", socket.id);
+  // console.log("User connected - ", socket.id);
 
   //join room
   socket.on("joinRoom", ({ username, room }) => {
     socket.join(room);
 
-    console.log(`${username} joined romm - ${room}`);
+    // console.log(`${username} joined romm - ${room}`);
 
     //emits to current user only
     // socket.emit("message", {
@@ -34,7 +34,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("sendMessage", (data) => {
-    console.log(data);
+    // console.log(data);
 
     // socket.broadcast.to(data.room).emit("message", {
     //   action: "Notify_Users",
