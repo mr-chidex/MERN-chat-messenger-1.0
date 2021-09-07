@@ -47,7 +47,7 @@ io.on("connection", (socket) => {
     // emits to current user only
     socket.emit("USER_JOINED_ROOM", {
       action: "Notify_User",
-      payload: `${roomData.user.username} welcome to ${roomData.room}`,
+      payload: `${roomData.user.username} welcome to chat room - ${roomData.room}`,
     });
 
     //emits to all users except cuurent user in a particular room(group)
